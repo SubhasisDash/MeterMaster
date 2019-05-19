@@ -1,6 +1,12 @@
 package com.example.meter.controller;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.meter.model.MeterMaster;
 import com.example.meter.model.MeterReadings;
+import com.example.meter.model.UserInfo;
 import com.example.meter.service.MeterService;
 
 @RestController
@@ -29,6 +36,7 @@ public class MeterController {
 
 	@GetMapping("/test")
 	public ResponseEntity<String> getDetails() {
+		
 		return new ResponseEntity<>("Hello GG", HttpStatus.OK);
 	}
 	
@@ -52,10 +60,44 @@ public class MeterController {
 		return new ResponseEntity<>(saveMeter, HttpStatus.OK);
 	}
 
+	//saving and updating details of both meter master and readings
 	@PostMapping("/save")
 	public ResponseEntity<MeterMaster> saveMeterDetails(@RequestBody MeterMaster master) {		
 		MeterMaster saveMeter = meterService.saveMeter(master);
 		return new ResponseEntity<>(saveMeter, HttpStatus.OK);
 	}
+	
+	//find all details
+	@GetMapping("/findall")
+	public ResponseEntity<List<MeterMaster>> findAll() {		
+		return new ResponseEntity<>(meterService.findAll(), HttpStatus.OK);
+	}
+	
+	//get data by department name
+	@GetMapping("/getdept")
+	public ResponseEntity<List<MeterMaster>> saveMeterDetails(@PathParam(value = "dept") String dept) {		
+		return new ResponseEntity<>(meterService.findDept(dept), HttpStatus.OK);
+	}	
+	
+	//update data by passing json reading and meter
+	/*{
+		"reading":"11",
+		"meter":"BF1/01"
+	}*/
+	@PostMapping("/updatereading")
+	public ResponseEntity<MeterReadings> updateReading(@RequestBody Map<String,String> readings) {		
+		try {
+			meterService.updateReading(Integer.valueOf(readings.get("reading")),readings.get("meter"));
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(meterService.findByMeterId(readings.get("meter")), HttpStatus.OK);
+	}
+	
+	//get last month readings
+	@GetMapping("/lastmonthreadings")
+	public ResponseEntity<List<MeterReadings>> getLastMonthReadings() {		
+		return new ResponseEntity<>(meterService.findLastMonthReadings(), HttpStatus.OK);
+	}	
 	
 }

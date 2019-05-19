@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Table(name="meter_readings")
 @Entity
 public class MeterReadings {
@@ -73,6 +75,7 @@ public class MeterReadings {
 		this.timestamp = timestamp;
 	}
 
+	@JsonIgnore
 	public MeterMaster getMaster() {
 		return master;
 	}
