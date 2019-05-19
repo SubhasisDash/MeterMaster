@@ -26,9 +26,6 @@ public class MeterMaster {
 	@Column(name="dept")
 	private String dept;
 	
-	@Column(name="meter_no")
-	private Integer meterNo;
-	
 	@Column(name="meter_desc")
 	private String meterDesc;
 	
@@ -64,13 +61,6 @@ public class MeterMaster {
 		this.dept = dept;
 	}
 
-	public Integer getMeterNo() {
-		return meterNo;
-	}
-
-	public void setMeterNo(Integer meterNo) {
-		this.meterNo = meterNo;
-	}
 
 	public String getMeterDesc() {
 		return meterDesc;
