@@ -2,6 +2,7 @@ package com.example.meter.controller;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,30 +41,11 @@ public class MeterController {
 		return new ResponseEntity<>("Hello GG", HttpStatus.OK);
 	}
 	
-	@GetMapping("/testsave")
-	public ResponseEntity<MeterMaster> saveMeter() {
-		
-		MeterReadings readings=new MeterReadings();
-		readings.setMeterNo("BF1/01");
-		readings.setDateTime(new Date());
-		readings.setLastReading(12323);
-		readings.setTimestamp(System.currentTimeMillis());
-		
-		MeterMaster master=new MeterMaster();
-		master.setDept("Blast Furnace");
-		master.setEntryDate(new Date());
-		master.setFeeder("HTSS INCOMER 01");
-		master.setMeterDesc("33 KV");
-		master.setReadings(readings);
-		
-		MeterMaster saveMeter = meterService.saveMeter(master);
-		return new ResponseEntity<>(saveMeter, HttpStatus.OK);
-	}
 
 	//saving and updating details of both meter master and readings
 	@PostMapping("/save")
-	public ResponseEntity<MeterMaster> saveMeterDetails(@RequestBody MeterMaster master) {		
-		MeterMaster saveMeter = meterService.saveMeter(master);
+	public ResponseEntity<List<MeterMaster>> saveMeterDetails(@RequestBody List<MeterMaster> master) {		
+		List<MeterMaster> saveMeter = meterService.saveMeter(master);
 		return new ResponseEntity<>(saveMeter, HttpStatus.OK);
 	}
 	
@@ -98,6 +80,14 @@ public class MeterController {
 	@GetMapping("/lastmonthreadings")
 	public ResponseEntity<List<MeterReadings>> getLastMonthReadings() {		
 		return new ResponseEntity<>(meterService.findLastMonthReadings(), HttpStatus.OK);
+	}
+	
+	//sum of readings of department for current month
+	@GetMapping("/readingsum")
+	public ResponseEntity<Map<String,Long>> getSumLastMonthReadings(@PathParam(value = "dept") String dept) {		
+		Map<String,Long> map=new HashMap<>();
+		map.putIfAbsent("sum", meterService.findLastMonthReadingsSum(dept));
+		return new ResponseEntity<>(map, HttpStatus.OK);
 	}	
 	
 }

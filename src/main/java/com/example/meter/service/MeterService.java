@@ -11,7 +11,7 @@ import com.example.meter.model.UserInfo;
 @Transactional
 public interface MeterService {
 
-	MeterMaster saveMeter(MeterMaster meter);
+	List<MeterMaster> saveMeter(List<MeterMaster> meter);
 	
 	List<MeterMaster> findDept(String deptname);
 
@@ -26,4 +26,6 @@ public interface MeterService {
 	UserInfo saveUser(UserInfo user);
 
 	List<MeterReadings> findLastMonthReadings();
+	
+	Long findLastMonthReadingsSum(String dept);
 }

@@ -3,6 +3,7 @@ package com.example.meter.impl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class MeterServiceImpl implements MeterService {
 	UserRepository userRepository;
 	
 	@Override
-	public MeterMaster saveMeter(MeterMaster meter) {
-		return meterRepository.save(meter);
+	public List<MeterMaster> saveMeter(List<MeterMaster> meter) {
+		return meterRepository.saveAll(meter);
 	}
 	
 	@Override
@@ -67,7 +68,24 @@ public class MeterServiceImpl implements MeterService {
 		return meterReadingRepository.findByDateTimeBetween(date2,date1);
 	}
 	
-	
+	@Override
+	public Long findLastMonthReadingsSum(String dept) {
+		List<MeterMaster> findByDept = meterRepository.findByDept(dept);
+		Calendar cal1 = Calendar.getInstance();
+		Long sum=0l;
+		for(MeterMaster p:findByDept) {
+			MeterReadings readings = p.getReadings();
+			if(Objects.nonNull(readings)) {
+				Calendar cal2=Calendar.getInstance();	
+				cal2.setTime(readings.getDateTime());
+				if((cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) && (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)))
+				{
+					sum= sum+ readings.getReading();
+				}
+			}	
+		}
+		return sum;
+	}
 
 	@Override
 	public UserInfo findUser(String name) {
