@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Table(name="meter_master")
@@ -30,6 +31,7 @@ public class MeterMaster {
 	private String meterDesc;
 	
 	@Column(name="entry_date")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date entryDate;
 	
 	@Column(name="manual_reading")
@@ -41,9 +43,16 @@ public class MeterMaster {
 	@Column(name="feeder")
 	private String feeder;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "meter_number", referencedColumnName = "meter_no")
-	MeterReadings readings;
+    @Column(name="meter_no")
+	String meterNo;
+
+	public String getMeterNo() {
+		return meterNo;
+	}
+
+	public void setMeterNo(String meterNo) {
+		this.meterNo = meterNo;
+	}
 
 	public Long getId() {
 		return id;
@@ -102,12 +111,12 @@ public class MeterMaster {
 		this.feeder = feeder;
 	}
 
-	public MeterReadings getReadings() {
-		return readings;
-	}
-
-	public void setReadings(MeterReadings readings) {
-		this.readings = readings;
-	}
+//	public MeterReadings getReadings() {
+//		return readings;
+//	}
+//
+//	public void setReadings(MeterReadings readings) {
+//		this.readings = readings;
+//	}
 	
 }

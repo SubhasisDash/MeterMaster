@@ -4,12 +4,19 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Table(name="meter_readings")
@@ -17,6 +24,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class MeterReadings {
 
 	@Id
+	@Column(name="reading_id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private Long readingId;
+	
 	@Column(name="meter_no")
 	private String meterNo;
 	
@@ -26,13 +37,18 @@ public class MeterReadings {
 	@Column(name="last_reading")
 	private Integer lastReading;
 	
+	
 	@Column(name="date_time")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date dateTime;
 	
 	@Column(name="timestamp")
 	private Long timestamp;
 
-	@OneToOne(mappedBy = "readings")
+	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "meter_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
 	MeterMaster master;
 	
 	public String getMeterNo() {

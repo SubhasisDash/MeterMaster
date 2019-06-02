@@ -49,6 +49,11 @@ public class MeterController {
 		return new ResponseEntity<>(saveMeter, HttpStatus.OK);
 	}
 	
+	@PostMapping("/save/meterReading")
+	public ResponseEntity<Boolean> saveMeterReadingDetails(@RequestBody MeterReadings reading) {		
+		meterService.saveMeterReading(reading);
+		return new ResponseEntity<>(true,HttpStatus.OK);
+	}
 	//find all details
 	@GetMapping("/findall")
 	public ResponseEntity<List<MeterMaster>> findAll() {		

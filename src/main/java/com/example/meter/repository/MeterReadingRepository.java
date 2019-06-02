@@ -20,8 +20,11 @@ public interface MeterReadingRepository extends JpaRepository<MeterReadings, Str
 	@Query("update MeterReadings set reading=(?1) where meterNo=(?2)")
 	void updateReading(Integer reading,String meterNo);
 	
-	/*@Query("select m from MeterReadings m where  between (?1) and (?2)")
-	List<MeterReadings> findLastMonthReadings(Date curdate,Date lastmonth);*/
+	@Query("select m from MeterReadings m where  dateTime between (?1) and (?2)")
+	List<MeterReadings> findLastMonthReadings(Date curdate,Date lastmonth);
 	
-	List<MeterReadings> findByDateTimeBetween(Date curdate,Date lastmonth);
+	//@Query("Select reading from MeterReadings mr where meterNo=(?1) order By dateTime ")
+	
+    @Query("SELECT mr.reading from MeterReadings mr where mr.dateTime=(Select MAX(dateTime) From MeterReadings where meterNo=(?1))")
+	Integer findLatestReading(String meterNo);
 }

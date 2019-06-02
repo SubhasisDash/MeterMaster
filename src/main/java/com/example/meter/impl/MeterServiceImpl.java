@@ -65,26 +65,26 @@ public class MeterServiceImpl implements MeterService {
 		c.add(Calendar.MONTH, -1);// then one month
 		Date date2 = c.getTime();
 		System.out.println(date2+ " " +date1);
-		return meterReadingRepository.findByDateTimeBetween(date2,date1);
+		return meterReadingRepository.findLastMonthReadings(date2,date1);
 	}
 	
 	@Override
 	public Long findLastMonthReadingsSum(String dept) {
-		List<MeterMaster> findByDept = meterRepository.findByDept(dept);
-		Calendar cal1 = Calendar.getInstance();
-		Long sum=0l;
-		for(MeterMaster p:findByDept) {
-			MeterReadings readings = p.getReadings();
-			if(Objects.nonNull(readings)) {
-				Calendar cal2=Calendar.getInstance();	
-				cal2.setTime(readings.getDateTime());
-				if((cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) && (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)))
-				{
-					sum= sum+ readings.getReading();
-				}
-			}	
-		}
-		return sum;
+//		List<MeterMaster> findByDept = meterRepository.findByDept(dept);
+//		Calendar cal1 = Calendar.getInstance();
+//		Long sum=0l;
+//		for(MeterMaster p:findByDept) {
+//			MeterReadings readings = p.getReadings();
+//			if(Objects.nonNull(readings)) {
+//				Calendar cal2=Calendar.getInstance();	
+//				cal2.setTime(readings.getDateTime());
+//				if((cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)) && (cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)))
+//				{
+//					sum= sum+ readings.getReading();
+//				}
+//			}	
+//		}
+		return 0l;
 	}
 
 	@Override
@@ -96,6 +96,21 @@ public class MeterServiceImpl implements MeterService {
 	@Override
 	public UserInfo saveUser(UserInfo user) {
 		return userRepository.save(user);
+		
+	}
+
+	@Override
+	public void saveMeterReading(MeterReadings readings) {
+		MeterMaster master=meterRepository.findByMeterNo(readings.getMeterNo());
+		readings.setMaster(master);
+		Integer lastReading=meterReadingRepository.findLatestReading(readings.getMeterNo());
+		if (lastReading!=null) {
+			readings.setLastReading(lastReading);
+		}
+		else {
+			readings.setLastReading(readings.getReading());
+		}
+		meterReadingRepository.save(readings);
 		
 	}
 	

@@ -27,5 +27,7 @@ public interface MeterService {
 
 	List<MeterReadings> findLastMonthReadings();
 	
+	void saveMeterReading(MeterReadings readings);
+	
 	Long findLastMonthReadingsSum(String dept);
 }

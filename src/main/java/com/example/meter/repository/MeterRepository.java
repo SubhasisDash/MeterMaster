@@ -12,4 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface MeterRepository extends JpaRepository<MeterMaster, Long>{
 
 	List<MeterMaster> findByDept(String dept);
+	
+	MeterMaster findByMeterNo(String meterNo);
 }
